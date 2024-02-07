@@ -4,7 +4,6 @@
 #include <stdio.h>
 #include <string.h>
 
-//Every LC2K file will contain less than 1000 lines of assembly.
 #define MAXLINELENGTH 1000
 
 struct Symbolic {
@@ -46,7 +45,6 @@ int main(int argc, char **argv) {
         exit(1);
     }
 
-    // Check for blank lines in the middle of the code.
     checkForBlankLinesInCode(inFilePtr);
 
     outFilePtr = fopen(outFileString, "w");
@@ -104,7 +102,6 @@ int main(int argc, char **argv) {
     return(0);
 }
 
-// Returns non-zero if the line contains only whitespace.
 static int lineIsBlank(char *line) {
     char whitespace[4] = {'\t', '\n', '\r', ' '};
     int nonempty_line = 0;
@@ -124,8 +121,6 @@ static int lineIsBlank(char *line) {
     return !nonempty_line;
 }
 
-// Exits 2 if file contains an empty line anywhere other than at the end of the file.
-// Note calling this function rewinds inFilePtr.
 static void checkForBlankLinesInCode(FILE *inFilePtr) {
     char line[MAXLINELENGTH];
     int blank_line_encountered = 0;
@@ -155,56 +150,31 @@ static void checkForBlankLinesInCode(FILE *inFilePtr) {
     rewind(inFilePtr);
 }
 
-/*
-* NOTE: The code defined below is not to be modifed as it is implimented correctly.
-*/
-
-/*
- * Read and parse a line of the assembly-language file.  Fields are returned
- * in label, opcode, arg0, arg1, arg2 (these strings must have memory already
- * allocated to them).
- *
- * Return values:
- *     0 if reached end of file
- *     1 if all went well
- *
- * exit(1) if line is too long.
- */
 int readAndParse(FILE *inFilePtr, char *label, char *opcode, char *arg0, char *arg1, char *arg2) {
     char line[MAXLINELENGTH];
     char *ptr = line;
 
-    /* delete prior values */
     label[0] = opcode[0] = arg0[0] = arg1[0] = arg2[0] = '\0';
 
-    /* read the line from the assembly-language file */
     if (fgets(line, MAXLINELENGTH, inFilePtr) == NULL) {
 	/* reached end of file */
         return(0);
     }
-
-    /* check for line too long */
+	
     if (strlen(line) == MAXLINELENGTH-1) {
 	   printf("error: line too long\n");
 	   exit(1);
     }
 
-    // Ignore blank lines at the end of the file.
     if(lineIsBlank(line)) {
         return 0;
     }
 
-    /* is there a label? */
     ptr = line;
     if (sscanf(ptr, "%[^\t\n ]", label)) {
-	/* successfully read label; advance pointer over the label */
         ptr += strlen(label);
     }
 
-    /*
-     * Parse the rest of the line.  Would be nice to have real regular
-     * expressions, but scanf will suffice.
-     */
     sscanf(ptr, "%*[\t\n\r ]%[^\t\n\r ]%*[\t\n\r ]%[^\t\n\r ]%*[\t\n\r ]%[^\t\n\r ]%*[\t\n\r ]%[^\t\n\r ]",
         opcode, arg0, arg1, arg2);
 
