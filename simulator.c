@@ -1,24 +1,12 @@
-/*
- * Project 1
- * EECS 370 LC-2K Instruction-level simulator
- *
- * Make sure to NOT modify printState or any of the associated functions
- */
-
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
 
-//DO NOT CHANGE THE FOLLOWING DEFINITIONS 
-
-// Machine Definitions
-#define MEMORYSIZE 65536 /* maximum number of words in memory (maximum number of lines in a given file)*/
-#define NUMREGS 8 /*total number of machine registers [0,7]*/
-
-// File Definitions
-#define MAXLINELENGTH 1000 /* MAXLINELENGTH is the max number of characters we read */
+#define MEMORYSIZE 65536
+#define NUMREGS 8 
+#define MAXLINELENGTH 1000
 
 typedef struct 
 stateStruct {
@@ -49,7 +37,6 @@ int main(int argc, char **argv) {
         exit(1);
     }
 
-    /* read the entire machine-code file into memory */
     for (state.numMemory = 0; fgets(line, MAXLINELENGTH, filePtr) != NULL; ++state.numMemory) {
         if (sscanf(line, "%d", state.mem+state.numMemory) != 1) {
             printf("error in reading address  %d\n. Please ensure you are providing a machine code file.", state.numMemory);
@@ -58,8 +45,6 @@ int main(int argc, char **argv) {
         }
         printf("memory[%d]=%d\n", state.numMemory, state.mem[state.numMemory]);
     }
-
-    //Your code starts here!
 
     for(int i = 0; i < 8; ++i) {
         state.reg[i] = 0;
@@ -79,13 +64,6 @@ int main(int argc, char **argv) {
         int arg0 =   (state.mem[state.pc] & 3670016)  >> 19;
         int arg1 =   (state.mem[state.pc] & 458752) >> 16;
         int arg2 =   state.mem[state.pc] & 7;
-
-
-        /*if(offset == -27) {
-            printf("found -27\n");
-            printf("size: %d\n", state.numMemory);
-            break;
-        }*/
 
         if(offset > state.numMemory || offset < ((state.numMemory) * -1)) {
             printf("offset is not in memory range");
@@ -134,9 +112,7 @@ int main(int argc, char **argv) {
             printf("there is not identidiable opcode");
             exit(1);
         }
-
-        //state.pc++;
-
+        
         if(state.pc == state.numMemory) {
             done = true;
         } else if(state.pc > state.numMemory) {
@@ -148,20 +124,11 @@ int main(int argc, char **argv) {
 
     }
 
-    //state.reg[1] += 32767;
     printf("machine halted\ntotal of %d instructions executed\nfinal state of machine:\n", total_instructions);
-
-    //printf("instruction #%d \n", total_instructions);
     printState(&state);
-
-    //Your code ends here! 
 
     return(0);
 }
-
-/*
-* DO NOT MODIFY ANY OF THE CODE BELOW. 
-*/
 
 void 
 printState(stateType *statePtr)
@@ -178,12 +145,7 @@ printState(stateType *statePtr)
     printf("end state\n");
 }
 
-// convert a 16-bit number into a 32-bit Linux integer
 static inline int convertNum(int num) 
 {
     return num - ( (num & (1<<15)) ? 1<<16 : 0 );
 }
-
-/*
-* Write any helper functions that you wish down here. 
-*/
