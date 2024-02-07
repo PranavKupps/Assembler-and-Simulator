@@ -4,14 +4,10 @@
 #include <stdio.h>
 #include <string.h>
 
-//DO NOT CHANGE THE FOLLOWING DEFINITIONS 
-
-// Machine Definitions
-#define MEMORYSIZE 65536 /* maximum number of words in memory (maximum number of lines in a given file)*/
+#define MEMORYSIZE 65536
 #define NUMREGS 8 /*total number of machine registers [0,7]*/
 
-// File Definitions
-#define MAXLINELENGTH 1000 /* MAXLINELENGTH is the max number of characters we read */
+#define MAXLINELENGTH 1000
 
 
 int main(int argc, char **argv) {
